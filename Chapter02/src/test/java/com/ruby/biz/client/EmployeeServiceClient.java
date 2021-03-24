@@ -25,25 +25,26 @@ public class EmployeeServiceClient
 		
 		try
 		{
-			//직원 엔티티 설정
+			//엔티티 생성 및 초기화
 			Employee employee = new Employee();
 			employee.setId(1L);
 			employee.setName("둘리");
-			employee.setMailId("gurum");
+			employee.setMailId("guruM");
 			employee.setStartDate(new Date());
 			employee.setTitle("과장");
 			employee.setDeptName("총무부");
 			employee.setSalary(2500.00);
 			employee.setCommissionPct(12.50);
 			
-			//트랜잭션 시작
+			//회원 등록 요청
 			tx.begin();
-			
-			//직원 등록처리
 			em.persist(employee);
-			
-			// 트랙잭션 종료(commit)
 			tx.commit();
+			
+			//등록한 회원 검색
+			Employee findEmployee = em.find(Employee.class, 1L);
+			System.out.println("검색한 회원 정보");
+			System.out.println(findEmployee.toString());
 		}
 		catch(Exception e)
 		{			
