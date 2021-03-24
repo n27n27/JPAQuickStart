@@ -32,6 +32,15 @@
     	<artifactId>h2</artifactId>
     	<version>1.4.200</version>
     </dependency>
+    
+    <!--  Lombok 라이브러리 -->
+    <dependency>
+    	<groupId>org.projectlombok</groupId>
+    	<artifactId>lombok</artifactId>
+    	<version>1.18.10</version>
+    	<scope>provided</scope>
+    </dependency>
+    
   </dependencies>
 
   <build>
