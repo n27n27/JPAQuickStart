@@ -21,7 +21,7 @@ public class EmployeeVO
 	private Timestamp startDate;
 	private String title;
 	@Column(name="DEPT_NAME")
-	private String deptName;
-	
+	private String deptName;	
 	private Double salry;
+	private String email;
 }
