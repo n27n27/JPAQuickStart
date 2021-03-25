@@ -1,9 +1,10 @@
 package com.ruby.biz.client;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
 
 import com.ruby.biz.domain.Employee;
@@ -23,29 +24,24 @@ public class EmployeeServiceClient
 		EntityTransaction tx = em.getTransaction();
 		
 		try
-		{
-			
-//			//직원 엔티티 생성 및 초기화
-//			Employee employee = new Employee();
-//			employee.setName("둘리");
-//			
-//			//트랜잭션 시작
-//			tx.begin();
-//			
-//			//직원등록
-//			em.persist(employee);
-//				
-//			//트랜잭션 종료
-//			tx.commit();
-			
-			//직원 검색
-			Employee findEmp = em.find(Employee.class, 1L);
-			
-			//직원 이름 변경
+		{			
+			//직원 등록
 			tx.begin();
-			findEmp.setName("도우너");
+			for(int i = 2; i <= 10; i++)
+			{
+				Employee employee = new Employee();
+				employee.setName("직원-" + i);
+				em.persist(employee);
+			}
 			tx.commit();
-				
+			
+			//직원 목록 조회
+			String jpql = "SELECT e FROM Employee e ORDER BY e.id DESC";
+			List<Employee> employeeList = em.createQuery(jpql, Employee.class).getResultList();
+			for(Employee employee: employeeList)
+			{
+				System.out.println("---> " + employee.toString());
+			}
 		}
 		catch(Exception e)
 		{			
