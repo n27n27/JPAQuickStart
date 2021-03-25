@@ -1,5 +1,7 @@
 package com.ruby.biz.client;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -17,7 +19,8 @@ public class ManyToOneBothWayClient
 		try
 		{
 			dataInsert(emf);
-			dataSelect(emf);
+			dataDelete(emf);
+//			dataSelect(emf);
 		}
 		catch(Exception e)
 		{
@@ -34,16 +37,20 @@ public class ManyToOneBothWayClient
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		
-		// 부서에 대한 참조 제거
-		Employee employee1 = em.find(Employee.class, 1L);
-		employee1.setDept(null);		
-		Employee employee2 = em.find(Employee.class, 2L);
-		employee2.setDept(null);
-		
-		
+		//부서 검색
 		Department department = em.find(Department.class, 1L);
+		
+		//직원의 부서 정보 수정
+		List<Employee> employeeList = department.getEmployeeList();
+		for(Employee employee : employeeList)
+		{
+			employee.standby();
+		}		
+		
 		em.remove(department);
+		
 		em.getTransaction().commit();
+		em.close();
 	}
 	
 	private static void dataUpdate(EntityManagerFactory emf)
@@ -84,22 +91,19 @@ public class ManyToOneBothWayClient
 		//부서 등록
 		Department department = new Department();
 		department.setName("개발부");		
-		em.persist(department);
+//		em.persist(department);
 		
-		//직원 등록
-		Employee employee1 = new Employee();
-		employee1.setName("둘리");
-		employee1.setDept(department);
-		em.persist(employee1);
+		//직원 여러 명등록
+		for(int i = 1; i <= 5; i++)
+		{
+			Employee employee = new Employee();
+			employee.setName("직원-" + i);
+			employee.setDept(department);
+			em.persist(employee);			
+		}
 		
-		//직원 등록
-		Employee employee2 = new Employee();
-		employee2.setName("도우너");
-		employee2.setDept(department);
-		em.persist(employee2);		
-			
-		System.out.println(department.getName() + "의 직원 수 : " + department.getEmployeeList().size());
-		
+		em.persist(department);		
+				
 		em.getTransaction().commit();
 		em.close();
 	}

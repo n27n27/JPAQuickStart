@@ -1,8 +1,9 @@
 package com.ruby.biz.domain;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,6 +29,9 @@ public class Department
 	@Column(length = 25, nullable = false)
 	private String name;
 	
-	@OneToMany(mappedBy = "dept")
-	private Set<Employee> employeeList = new HashSet<>();
+//	@OneToMany(mappedBy = "dept", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+//	private List<Employee> employeeList = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "dept", cascade = {CascadeType.PERSIST})
+	private List<Employee> employeeList = new ArrayList<>();
 }
