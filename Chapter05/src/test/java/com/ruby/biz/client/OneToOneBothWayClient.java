@@ -10,7 +10,7 @@ import javax.persistence.Persistence;
 import com.ruby.biz.domain.Employee;
 import com.ruby.biz.domain.EmployeeCard;
 
-public class OneToOneOneBothClient
+public class OneToOneBothWayClient
 {
 
 	public static void main(String[] args)
@@ -35,8 +35,14 @@ public class OneToOneOneBothClient
 	{
 		EntityManager em = emf.createEntityManager();
 		
+		EmployeeCard employeeCard = em.find(EmployeeCard.class, 1L);
+		System.out.println("검색된 사원증 번호: " + employeeCard.getCardId());
+		System.out.println("권한 : " + employeeCard.getRole());
+		System.out.println("사원증 소유자: " + employeeCard.getEmployee().getName());
+		
 		Employee employee = em.find(Employee.class, 1L);
-		System.out.println("직원을 통한 사원증 정보 접근: " + employee.getCard().toString());
+		System.out.println("검색된 직원 이름: " + employee.getName());
+		System.out.println("직원이 소유한 사원증 권한 : " + employee.getCard().getRole());		
 	}
 	
 	private static void dataInsert(EntityManagerFactory emf) throws ParseException
@@ -44,23 +50,21 @@ public class OneToOneOneBothClient
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		
+		// 직원 등록
+		Employee employee = new Employee();
+		employee.setName("둘리");		
+		em.persist(employee);
+		
 		// 사원증 등록
 		EmployeeCard card = new EmployeeCard();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		card.setExpireDate(dateFormat.parse("2025-12-31"));
-		card.setRole("MASTER");		
-		em.persist(card);
-		
-		// 직원 등록
-		Employee employee = new Employee();
-		employee.setName("둘리");
-		employee.setEmployeeCard(card);
-		em.persist(employee);		
+		card.setRole("MASTER");
+		card.setEmployee(employee);
+		em.persist(card);				
 		
 		em.getTransaction().commit();
 		em.close();
 		
-		System.out.println("사원증을 통한 직원 정보 접근 : " + card.getEmployee().getName());
-		System.out.println("직원을 통한 사원증 정보 접근 : " + employee.getCard().getExpireDate());
 	}
 }

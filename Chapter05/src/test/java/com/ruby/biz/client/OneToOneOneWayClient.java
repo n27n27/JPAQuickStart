@@ -37,13 +37,9 @@ public class OneToOneOneWayClient
 		
 		// 검색된 사원증을 통해 직원 정보 사용하기
 		EmployeeCard employeeCard = em.find(EmployeeCard.class, 1L);
-		System.out.println("사원증 유효기간 : " + employeeCard.getExpireDate());
-		System.out.println("사원증 소유자 : " + employeeCard.getEmployee().getName());
-		
-		// 검색된 직원을 통해 사원증 정보 사용하기
-		Employee employee = em.find(Employee.class, 1L);
-		System.out.println("사원증 소유자 : " + employee.getName());
-		System.out.println("사원증 유효기간 : " + employee.getCard().getExpireDate());		
+		System.out.println("검색된 사원증 번호 : " + employeeCard.getCardId());
+		System.out.println("권한 : " + employeeCard.getRole());
+		System.out.println("사원증 소유자 : " + employeeCard.getEmployee().getName());						
 	}
 	
 	private static void dataInsert(EntityManagerFactory emf) throws ParseException

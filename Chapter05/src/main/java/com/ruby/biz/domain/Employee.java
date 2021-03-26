@@ -2,7 +2,6 @@ package com.ruby.biz.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,7 +22,7 @@ public class Employee
 	@Column(length = 25, nullable = false)
 	private String name;
 	
-	@OneToOne(optional = false, fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "employee")
 	private EmployeeCard card;
 	
 	public void setEmployeeCard(EmployeeCard card)
