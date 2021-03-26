@@ -36,18 +36,19 @@ public class JPQLJoinClient
 	{
 		EntityManager em = emf.createEntityManager();
 		
-		String jpql = "SELECT e, e.dept FROM Employee e"
-				+ " ORDER BY e.dept.name DESC, e.salary ASC";
-		TypedQuery<Object[]> query = em.createQuery(jpql, Object[].class);
+		String jpql = "SELECT e FROM Employee e"
+				+ " WHERE NOT EXISTS (SELECT d"
+				+ " FROM Department d"
+				+ " WHERE d = e.dept)";
 		
-		List<Object[]> resultList = (List<Object[]>) query.getResultList();
-		System.out.println("검색된 직원 목록");
-		for(Object[] result: resultList)
+		TypedQuery<Employee> query = em.createQuery(jpql, Employee.class);
+		List<Employee> resultList = query.getResultList();
+		System.out.println("평균 이상의 급여 수급자 명단");
+		for(Employee employee: resultList)
 		{
-			Employee employee = (Employee) result[0];
-			Department department = (Department) result[1];
-			System.out.println(department.getName() + "에 소속된 " + employee.getName() + "의 급여 " + employee.getSalary());
+			System.out.println(employee.getName());
 		}
+		
 		em.close();
 	}
 	
