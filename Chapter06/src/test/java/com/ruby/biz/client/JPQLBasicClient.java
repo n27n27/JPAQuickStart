@@ -1,12 +1,11 @@
 package com.ruby.biz.client;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import com.ruby.biz.domian.Employee;
 
@@ -35,19 +34,20 @@ public class JPQLBasicClient
 	{
 		EntityManager em = emf.createEntityManager();
 		
-		//JPQL
-		String jpql = "SELECT id, name, title, deptName, salary"
-				+ " FROM Employee WHERE id = ?1 AND name = ?2";
+		String jpql = "SELECT e FROM Employee e WHERE e.id = 1L";
+		TypedQuery<Employee> query = em.createQuery(jpql, Employee.class);
 		
-		//JPQL 전송
-		Query query = em.createQuery(jpql);
-		query.setParameter(1, 1L);
-		query.setParameter(2, "직원 1");		
+		// 1번 직원검색
+		Employee findEmp1 = query.getSingleResult();
 		
-		// 검색 결과 처리
-		Object[] result = (Object[]) query.getSingleResult();
-		System.out.println(result[0] + "번 직원의 정보");
-		System.out.println(Arrays.toString(result));
+		
+		// 다시 1번 직원검색
+		Employee findEmp2 = query.getSingleResult();
+		
+		if(findEmp1 == findEmp2)
+		{
+			System.out.println("두 객체의 주소는 동일하다.");
+		}
 		
 		em.close();
 	}

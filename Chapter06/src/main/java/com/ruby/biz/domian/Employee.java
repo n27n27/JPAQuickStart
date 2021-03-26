@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -37,4 +39,15 @@ public class Employee
 	
 	@Column(name = "COMMISSION_PCT")
 	private Double commissionPct;
+	
+	@ManyToOne
+	@JoinColumn(name = "DEPT_ID")
+	private Department dept;
+	
+	public void setDept(Department department)
+	{
+		this.dept = department;
+		if(department != null)
+			department.getEmployeeList().add(this);
+	}
 }

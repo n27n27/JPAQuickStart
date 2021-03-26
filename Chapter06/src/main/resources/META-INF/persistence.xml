@@ -5,10 +5,7 @@
 		http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 		
 	<!-- 영속성 유닛 설정 -->
-	<persistence-unit name="Chapter06">
-		
-		<!-- 엔티티 클래스 등록 -->
-		<class>com.ruby.biz.domain.Employee</class>
+	<persistence-unit name="Chapter06">		
 		
 		<!-- JPA 프로퍼티 설정 -->
 		<properties>

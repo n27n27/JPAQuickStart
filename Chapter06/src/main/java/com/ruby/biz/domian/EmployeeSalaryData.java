@@ -1,4 +1,4 @@
-package com.ruby.biz.domain;
+package com.ruby.biz.domian;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
