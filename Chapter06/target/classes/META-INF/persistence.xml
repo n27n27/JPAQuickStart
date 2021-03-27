@@ -7,6 +7,9 @@
 	<!-- 영속성 유닛 설정 -->
 	<persistence-unit name="Chapter06">		
 		
+		<!-- Named Query XML -->
+		<mapping-file>jpql/EntityMap_employee.xml</mapping-file>
+		
 		<!-- JPA 프로퍼티 설정 -->
 		<properties>
 		

@@ -10,11 +10,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString(exclude = "employeeList")
 @Entity
 @Table(name = "S_DEPT")
 public class Department
@@ -26,6 +29,7 @@ public class Department
 	
 	private String name;
 	
+	@OrderColumn(name="EMP_IDX")
 	@OneToMany(mappedBy = "dept", cascade = CascadeType.PERSIST)
 	private List<Employee> employeeList = new ArrayList<>();
 }
