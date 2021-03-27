@@ -1,7 +1,8 @@
 package com.ruby.biz.client;
 
-import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import com.ruby.biz.config.SpringConfiguration;
 import com.ruby.biz.domain.Department;
 import com.ruby.biz.domain.Employee;
 import com.ruby.biz.service.DepartmentService;
@@ -12,7 +13,7 @@ public class EmployeeServiceClient
 
 	public static void main(String[] args)
 	{
-		GenericXmlApplicationContext container = new GenericXmlApplicationContext("spring/business-layer.xml");
+		AnnotationConfigApplicationContext container = new AnnotationConfigApplicationContext(SpringConfiguration.class);
 		
 		DepartmentService deptService = (DepartmentService) container.getBean("deptService");
 		EmployeeService employeeService = (EmployeeService) container.getBean("empService");

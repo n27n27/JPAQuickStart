@@ -2,6 +2,7 @@ package com.ruby.biz.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,8 +30,7 @@ public class Employee
 	
 	private Double salary;
 	
-	@ManyToOne
-	@JoinColumn(name = "DEPT_ID")
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Department dept;
 	
 	public void setDept(Department department)
