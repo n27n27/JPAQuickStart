@@ -1,5 +1,6 @@
 package com.ruby.biz.client;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -7,7 +8,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
+import com.ruby.biz.domain.Department;
 import com.ruby.biz.domain.Employee;
 
 public class CriteriaSearchClient
@@ -17,9 +22,9 @@ public class CriteriaSearchClient
 	{
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("Chapter07");
 		try
-		{
+		{			
 			dataInsert(emf);
-			dataSelect(emf);
+			dataSelect(emf);			
 		}
 		catch(Exception e)
 		{
@@ -34,39 +39,30 @@ public class CriteriaSearchClient
 	private static void dataSelect(EntityManagerFactory emf)
 	{
 		EntityManager em = emf.createEntityManager();
+						
+		// 크라이테리어 빌더 생성
+		CriteriaBuilder builder = em.getCriteriaBuilder();
 		
-		// 검색 정보 설정
-		String searchCondition = "TITLE";
-		String searchKeyword = "과장";
+		// 크라이테리어 쿼리 생성
+		CriteriaQuery<Department> criteriaQuery = builder.createQuery(Department.class);
+				
+		// FROM Department dept
+		Root<Department> dept = criteriaQuery.from(Department.class);		
 		
-		// 검색 관련 쿼리
-		String jpqlByMailId = "SELECT e FROM Employee e WHERE e.mailId = :searchKeyword";
-		String jpqlByName	= "SELECT e FROM Employee e WHERE e.name = :searchKeyword";
-		String jpqlByTitle	= "SELECT e FROM Employee e WHERE e.title = :searchKeyword";
+		// SELECT dept
+		criteriaQuery.select(dept).distinct(true);
 		
-		TypedQuery<Employee> query = null;
+		// JOIN FETCH dept.employeeList
+		dept.fetch("employeeList");
 		
-		// 검색 조건에 따른 분기 처리
-		if(searchCondition.equals("NAME"))
+		//WHERE employeeList.size > 2
+		criteriaQuery.where(builder.ge(builder.size(dept.<List<Employee>>get("employeeList")), 3));
+		
+		TypedQuery<Department> query = em.createQuery(criteriaQuery);
+		List<Department> resultList = query.getResultList();
+		for(Department department: resultList)
 		{
-			query = em.createQuery(jpqlByName, Employee.class);
-		}
-		else if(searchCondition.equals("MAILID"))
-		{
-			query = em.createQuery(jpqlByMailId, Employee.class);
-		}
-		else if(searchCondition.equals("TITLE"))
-		{
-			query = em.createQuery(jpqlByTitle, Employee.class);
-		}
-		
-		query.setParameter("searchKeyword", searchKeyword);
-		List<Employee> resultList = query.getResultList();
-		
-		System.out.println(searchCondition + "을 기준으로한 검색 결과");
-		for(Employee result: resultList)
-		{
-			System.out.println("---> " + result.toString());
+			System.out.println(department.getName());
 		}
 		
 		em.close();
@@ -77,13 +73,23 @@ public class CriteriaSearchClient
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		
+		// 부서 정보 등록
+		Department devDept = new Department();
+		devDept.setName("개발부");
+		em.persist(devDept);
+		
+		Department salsDept = new Department();
+		salsDept.setName("영업부");
+		em.persist(salsDept);		
+		
 		//직원 정보 등록
 		for(int i = 1; i <= 3; i++)
 		{
 			Employee employee = new Employee();
 			employee.setName("개발맨 " + i);
 			employee.setMailId("Corona" + i);
-			employee.setDeptName("개발부");
+//			employee.setDeptName("개발부");
+			employee.setDept(devDept);
 			employee.setSalary(12700.00 * i);
 			employee.setStartDate(new Date());
 			employee.setTitle("사원");
@@ -96,7 +102,8 @@ public class CriteriaSearchClient
 			Employee employee = new Employee();
 			employee.setName("영업맨 " + i);
 			employee.setMailId("Virus" + i);
-			employee.setDeptName("영업부");
+//			employee.setDeptName("영업부");
+			employee.setDept(salsDept);
 			employee.setSalary(23800.00 * i);
 			employee.setStartDate(new Date());
 			employee.setTitle("과장");
