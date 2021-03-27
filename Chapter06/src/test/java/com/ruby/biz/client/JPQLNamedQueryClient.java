@@ -21,7 +21,7 @@ public class JPQLNamedQueryClient
 		try
 		{
 			dataInsert(emf);
-			dataSelect(emf);
+			dataUpdate(emf);
 		}
 		catch(Exception e)
 		{
@@ -31,6 +31,38 @@ public class JPQLNamedQueryClient
 		{
 			emf.close();
 		}
+	}
+	
+	private static void dataDelete(EntityManagerFactory emf)
+	{
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		
+		Query query = em.createQuery("DELETE Employee e WHERE e.name = :empName");
+		query.setParameter("empName", "아르바이트");
+		int updateCount = query.executeUpdate();
+		System.out.println(updateCount + "건의 데이터 갱신됨");
+		
+		em.getTransaction().commit();
+		em.close();
+	}
+	
+	private static void dataUpdate(EntityManagerFactory emf)
+	{
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();	
+		
+		Query query = em.createQuery("UPDATE Employee e SET e.salary = salary * 1.3 WHERE e.id = :empId");
+		query.setParameter("empId", 3L);
+		int updateCount = query.executeUpdate();
+				
+		String jpql = "SELECT e FROM Employee e WHERE e.id = 3L";
+		query = em.createQuery(jpql);
+		Employee employee = (Employee) query.getSingleResult();
+		System.out.println(employee.getId() + "번 직원의 수정된 급여: " + employee.getSalary());
+		
+		em.getTransaction().commit();
+		em.close();
 	}
 	
 	private static void dataSelect(EntityManagerFactory emf)
