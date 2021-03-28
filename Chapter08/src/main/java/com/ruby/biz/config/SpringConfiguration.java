@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @ComponentScan(basePackages = "com.ruby.biz")
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "com.ruby.biz.repository")
+@EnableJpaRepositories(basePackages = "com.ruby.biz.repository",
+					entityManagerFactoryRef = "factoryBean",
+					transactionManagerRef = "txManager")
 public class SpringConfiguration
 {
 	@Bean
